@@ -125,7 +125,7 @@ def draw_images(root_dir):
     plt.show()
 
 
-def draw_dataset(pickle_file):
+def draw_datasets(pickle_file):
     print(pickle_file)
     with open(pickle_file, 'rb') as f:
         letter_set = pickle.load(f)
@@ -162,4 +162,4 @@ if __name__ == '__main__':
     print('train_datasets:', train_datasets)
     print('test_datasets:', test_datasets)
 
-    draw_dataset(train_datasets[0])
+    draw_datasets(train_datasets[0])
