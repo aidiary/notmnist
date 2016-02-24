@@ -3,16 +3,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import sys
+import random
 import tarfile
 import pickle
-from IPython.display import display, Image
-from scipy import ndimage
+from scipy import ndimage, misc
 from sklearn.linear_model import LogisticRegression
 from urllib.request import urlretrieve
 
 
 url = 'http://yaroslavvb.com/upload/notMNIST/'
-num_classes = 10
+num_classes = 10  # A to J
 np.random.seed(133)
 
 
@@ -31,6 +31,7 @@ def maybe_download(filename, expected_bytes, force=False):
 
 
 def maybe_extract(filename, force=False):
+    """Extract tar.gz"""
     root = os.path.splitext(os.path.splitext(filename)[0])[0]  # remove .tar.gz
     if os.path.isdir(root) and not force:
         # You may override by setting force=True
@@ -41,16 +42,33 @@ def maybe_extract(filename, force=False):
         sys.stdout.flush()
         tar.extractall()
         tar.close()
-    data_folders = [
+    data_dirs = [
         os.path.join(root, d) for d in sorted(os.listdir(root))
         if os.path.isdir(os.path.join(root, d))
     ]
-    if len(data_folders) != num_classes:
+    if len(data_dirs) != num_classes:
         raise Exception(
-            'Expected %d folders, one per class. Found % instead.' % (
-                num_classes, len(data_folders))
+            'Expected %d dirs, one per class. Found % instead.' % (
+                num_classes, len(data_dirs))
         )
-    return data_folders
+    return data_dirs
+
+
+def draw_images(root_dir):
+    """Draw sample images for each class"""
+    assert len(root_dir) == num_classes  # A to J
+    num_cols = 10
+    pos = 1
+    for i in range(num_classes):
+        target_dir = root_dir[i]
+        for j in range(num_cols):
+            plt.subplot(num_classes, num_cols, pos)
+            random_file = random.choice(os.listdir(target_dir))
+            image = misc.imread(os.path.join(target_dir, random_file))
+            plt.imshow(image, cmap=plt.cm.gray)
+            plt.axis('off')
+            pos += 1
+    plt.show()
 
 
 if __name__ == '__main__':
@@ -60,9 +78,11 @@ if __name__ == '__main__':
     print('train_filename:', train_filename)
     print('test_filename:', test_filename)
 
-    train_folders = maybe_extract(train_filename)
-    test_folders = maybe_extract(test_filename)
+    train_dirs = maybe_extract(train_filename)
+    test_dirs = maybe_extract(test_filename)
 
-    print('train_folders:', train_folders)
-    print('test_folders:', test_folders)
+    print('train_dirs:', train_dirs)
+    print('test_dirs:', test_dirs)
+
+    draw_images(train_dirs)
 
