@@ -9,7 +9,7 @@ import pickle
 from scipy import ndimage, misc
 from sklearn.linear_model import LogisticRegression
 from urllib.request import urlretrieve
-
+from collections import Counter
 
 url = 'http://yaroslavvb.com/upload/notMNIST/'
 num_classes = 10  # A to J
@@ -195,7 +195,7 @@ def merge_datasets(pickle_files, train_size, valid_size=0):
             print('Unable to process data from', pickle_file, ':', e)
             raise
 
-        return valid_dataset, valid_labels, train_dataset, train_labels
+    return valid_dataset, valid_labels, train_dataset, train_labels
 
 
 def randomize(dataset, labels):
@@ -203,6 +203,12 @@ def randomize(dataset, labels):
     shuffled_dataset = dataset[permutation, :, :]
     shuffled_labels = labels[permutation]
     return shuffled_dataset, shuffled_labels
+
+
+def verify_class_balance(labels):
+    count_dict = Counter(labels)
+    for i in range(num_classes):
+        print("class%d: %d" % (i, count_dict[i]))
 
 
 if __name__ == '__main__':
@@ -228,8 +234,8 @@ if __name__ == '__main__':
 
     # draw_datasets(train_datasets[0])
 
-    verify_datasets(train_datasets)
-    verify_datasets(test_datasets)
+    # verify_datasets(train_datasets)
+    # verify_datasets(test_datasets)
 
     valid_dataset, valid_labels, train_dataset, train_labels = \
         merge_datasets(train_datasets, train_size, valid_size)
@@ -244,3 +250,8 @@ if __name__ == '__main__':
     train_dataset, train_labels = randomize(train_dataset, train_labels)
     valid_dataset, valid_labels = randomize(valid_dataset, valid_labels)
     test_dataset, test_labels = randomize(test_dataset, test_labels)
+
+    verify_class_balance(train_labels)
+    verify_class_balance(valid_labels)
+    verify_class_balance(test_labels)
+
