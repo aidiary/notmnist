@@ -198,6 +198,13 @@ def merge_datasets(pickle_files, train_size, valid_size=0):
         return valid_dataset, valid_labels, train_dataset, train_labels
 
 
+def randomize(dataset, labels):
+    permutation = np.random.permutation(labels.shape[0])
+    shuffled_dataset = dataset[permutation, :, :]
+    shuffled_labels = labels[permutation]
+    return shuffled_dataset, shuffled_labels
+
+
 if __name__ == '__main__':
     train_filename = maybe_download('notMNIST_large.tar.gz', 247336696)
     test_filename = maybe_download('notMNIST_small.tar.gz', 8458043)
@@ -234,3 +241,6 @@ if __name__ == '__main__':
     print('Validation:', valid_dataset.shape, valid_labels.shape)
     print('Testing:', test_dataset.shape, test_labels.shape)
 
+    train_dataset, train_labels = randomize(train_dataset, train_labels)
+    valid_dataset, valid_labels = randomize(valid_dataset, valid_labels)
+    test_dataset, test_labels = randomize(test_dataset, test_labels)
