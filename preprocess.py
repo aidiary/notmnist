@@ -68,8 +68,8 @@ def load_letter(letter_dir, min_num_images):
         image_file = os.path.join(letter_dir, image)
         try:
             # normalize image to [-0.5, 0.5]
-            image_data = (ndimage.imread(image_file).astype(float) \
-                - pixel_depth / 2) / pixel_depth
+            image_data = (ndimage.imread(image_file).astype(float) -
+                          pixel_depth / 2) / pixel_depth
             if image_data.shape != (image_size, image_size):
                 raise Exception('Unexpected image shape: %s' % str(image_data.shape))
             dataset[image_index, :, :] = image_data
@@ -119,7 +119,7 @@ def draw_images(root_dir):
             plt.subplot(num_classes, num_cols, pos)
             random_file = random.choice(os.listdir(target_dir))
             image = misc.imread(os.path.join(target_dir, random_file))
-            plt.imshow(image, cmap=plt.cm.gray)
+            plt.imshow(image, cmap=plt.get_cmap('gray'))
             plt.axis('off')
             pos += 1
     plt.show()
@@ -136,7 +136,7 @@ def draw_datasets(pickle_file):
         for j in range(num_cols):
             plt.subplot(num_rows, num_cols, pos)
             image = letter_set[random.randint(0, len(letter_set))]
-            plt.imshow(image, cmap=plt.cm.gray)
+            plt.imshow(image, cmap=plt.get_cmap('gray'))
             plt.axis('off')
             pos += 1
     plt.show()
