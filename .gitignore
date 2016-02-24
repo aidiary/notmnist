@@ -60,3 +60,11 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# PyCharm
+.idea
+
+# data
+*.tar.gz
+notMNIST_large
+notMNIST_small
