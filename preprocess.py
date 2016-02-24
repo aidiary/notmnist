@@ -94,6 +94,17 @@ def load_letter(letter_dir, min_num_images):
         except IOError as e:
             print('Could not read:', image_file, ':', e, "- it's ok, skipping.")
 
+    num_images = image_index
+    dataset = dataset[0:num_images, :, :]
+    if num_images < min_num_images:
+        raise Exception('Many fewer images than expected: %d < %d'
+                        % (num_images, min_num_images))
+
+    print('Full dataset tensor:', dataset.shape)
+    print('Mean:', np.mean(dataset))
+    print('Standard deviation:', np.std(dataset))
+    return dataset
+
 
 def maybe_pickle(data_dirs, min_num_images_per_class, force=False):
     dataset_names = []
@@ -114,6 +125,13 @@ def maybe_pickle(data_dirs, min_num_images_per_class, force=False):
     return dataset_names
 
 
+def draw_dataset(pickle_file):
+    print(pickle_file)
+    with open(pickle_file, 'rb') as f:
+        letter_set = pickle.load(f)
+        print(letter_set.shape)
+
+
 if __name__ == '__main__':
     train_filename = maybe_download('notMNIST_large.tar.gz', 247336696)
     test_filename = maybe_download('notMNIST_small.tar.gz', 8458043)
@@ -127,10 +145,12 @@ if __name__ == '__main__':
     print('train_dirs:', train_dirs)
     print('test_dirs:', test_dirs)
 
-    draw_images(train_dirs)
+    # draw_images(train_dirs)
 
     train_datasets = maybe_pickle(train_dirs, 45000)
     test_datasets = maybe_pickle(test_dirs, 1800)
 
     print('train_datasets:', train_datasets)
     print('test_datasets:', test_datasets)
+
+    draw_dataset(train_datasets[0])
