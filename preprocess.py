@@ -141,6 +141,14 @@ def draw_datasets(pickle_file):
             pos += 1
     plt.show()
 
+
+def verify_datasets(datasets):
+    for pickle_file in datasets:
+        with open(pickle_file, 'rb') as f:
+            letter_set = pickle.load(f)
+        print("%s: %d" % (pickle_file, len(letter_set)))
+
+
 if __name__ == '__main__':
     train_filename = maybe_download('notMNIST_large.tar.gz', 247336696)
     test_filename = maybe_download('notMNIST_small.tar.gz', 8458043)
@@ -162,4 +170,7 @@ if __name__ == '__main__':
     print('train_datasets:', train_datasets)
     print('test_datasets:', test_datasets)
 
-    draw_datasets(train_datasets[0])
+    # draw_datasets(train_datasets[0])
+
+    verify_datasets(train_datasets)
+    verify_datasets(test_datasets)
