@@ -56,23 +56,6 @@ def maybe_extract(filename, force=False):
     return data_dirs
 
 
-def draw_images(root_dir):
-    """Draw sample images for each class"""
-    assert len(root_dir) == num_classes  # A to J
-    num_cols = 10
-    pos = 1
-    for i in range(num_classes):
-        target_dir = root_dir[i]
-        for j in range(num_cols):
-            plt.subplot(num_classes, num_cols, pos)
-            random_file = random.choice(os.listdir(target_dir))
-            image = misc.imread(os.path.join(target_dir, random_file))
-            plt.imshow(image, cmap=plt.cm.gray)
-            plt.axis('off')
-            pos += 1
-    plt.show()
-
-
 def load_letter(letter_dir, min_num_images):
     """Load the data for a single letter label."""
     image_files = os.listdir(letter_dir)
@@ -125,12 +108,38 @@ def maybe_pickle(data_dirs, min_num_images_per_class, force=False):
     return dataset_names
 
 
+def draw_images(root_dir):
+    """Draw sample images for each class"""
+    assert len(root_dir) == num_classes  # A to J
+    num_cols = 10
+    pos = 1
+    for i in range(num_classes):
+        target_dir = root_dir[i]
+        for j in range(num_cols):
+            plt.subplot(num_classes, num_cols, pos)
+            random_file = random.choice(os.listdir(target_dir))
+            image = misc.imread(os.path.join(target_dir, random_file))
+            plt.imshow(image, cmap=plt.cm.gray)
+            plt.axis('off')
+            pos += 1
+    plt.show()
+
+
 def draw_dataset(pickle_file):
     print(pickle_file)
     with open(pickle_file, 'rb') as f:
         letter_set = pickle.load(f)
         print(letter_set.shape)
-
+    num_rows = num_cols = 10
+    pos = 1
+    for i in range(num_rows):
+        for j in range(num_cols):
+            plt.subplot(num_rows, num_cols, pos)
+            image = letter_set[random.randint(0, len(letter_set))]
+            plt.imshow(image, cmap=plt.cm.gray)
+            plt.axis('off')
+            pos += 1
+    plt.show()
 
 if __name__ == '__main__':
     train_filename = maybe_download('notMNIST_large.tar.gz', 247336696)
