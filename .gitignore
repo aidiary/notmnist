@@ -66,6 +66,7 @@ target/
 
 # data
 *.tar.gz
+*.pickle
 notMNIST_large
 notMNIST_small
 notMNIST.pickle
