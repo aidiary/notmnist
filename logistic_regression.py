@@ -2,6 +2,14 @@ import os
 import pickle
 from sklearn.linear_model import LogisticRegression
 
+# accuracy
+# num of training
+# 50     => 0.509
+# 100    => 0.697
+# 1000   => 0.833
+# 5000   => 0.851
+# 200000 => 0.893
+
 if __name__ == '__main__':
     pickle_file = 'notMNIST.pickle'
 
@@ -23,7 +31,7 @@ if __name__ == '__main__':
     test_dataset = test_dataset.reshape(num_test, -1)
 
     # Logistic Regression
-    max_train = num_train
+    max_train = 5000
     model_file = "logreg_%d.pickle" % max_train
     if not os.path.exists(model_file):
         logreg = LogisticRegression()
