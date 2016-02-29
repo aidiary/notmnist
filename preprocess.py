@@ -7,7 +7,6 @@ import random
 import tarfile
 import pickle
 from scipy import ndimage, misc
-from sklearn.linear_model import LogisticRegression
 from urllib.request import urlretrieve
 from collections import Counter
 
