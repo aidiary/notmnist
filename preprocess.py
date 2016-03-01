@@ -17,7 +17,7 @@ pixel_depth = 255.0
 
 train_size = 200000
 valid_size = 10000
-test_size = 10000
+test_size = 18724
 
 np.random.seed(133)
 
