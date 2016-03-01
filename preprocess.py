@@ -106,7 +106,7 @@ def maybe_pickle(data_dirs, min_num_images_per_class, force=False):
             dataset = load_letter(d, min_num_images_per_class)
             try:
                 with open(set_filename, 'wb') as f:
-                    pickle.dump(dataset, f, pickle.HIGHEST_PROTOCOL)
+                    pickle.dump(dataset, f, protocol=2)
             except Exception as e:
                 print('Unable to save data to', set_filename, ':', e)
     return dataset_names
@@ -266,7 +266,7 @@ if __name__ == '__main__':
             'test_dataset': test_dataset,
             'test_labels': test_labels,
         }
-        pickle.dump(save, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(save, f, 2)
         f.close()
     except Exception as e:
         print('Unable to save data to', pickle_file, ':', e)
