@@ -6,7 +6,8 @@ image_size = 28
 num_labels = 10
 
 train_subset = 10000
-num_steps = 801
+num_steps = 3001
+batch_size = 128
 
 def reformat(dataset, labels):
     dataset = dataset.reshape((-1, image_size * image_size)).astype(np.float32)
@@ -46,8 +47,9 @@ if __name__ == "__main__":
     graph = tf.Graph()
     with graph.as_default():
         # Input dataset
-        tf_train_dataset = tf.constant(train_dataset[:train_subset, :])
-        tf_train_labels = tf.constant(train_labels[:train_subset])
+        tf_train_dataset = tf.placeholder(tf.float32,
+                                          shape=(batch_size, image_size * image_size))
+        tf_train_labels = tf.placeholder(tf.float32, shape=(batch_size, num_labels))
         tf_valid_dataset = tf.constant(valid_dataset)
         tf_test_dataset = tf.constant(test_dataset)
 
@@ -75,12 +77,18 @@ if __name__ == "__main__":
         print('Initiallized')
 
         for step in range(num_steps):
-            _, l, predictions = session.run([optimizer, loss, train_prediction])
-            if (step % 100 == 0):
-                print('Loss at step %d: %f' % (step, l))
-                print('\tTraining accuracy: %.1f%%' % accuracy(
-                      predictions, train_labels[:train_subset, :]))
+            offset = (step * batch_size) % (train_labels.shape[0] - batch_size)
+            # Generate a minibatch
+            batch_data = train_dataset[offset:(offset + batch_size), :]
+            batch_labels = train_labels[offset:(offset + batch_size), :]
+            feed_dict = {tf_train_dataset: batch_data,
+                         tf_train_labels: batch_labels}
+            _, l, predictions = session.run([optimizer, loss, train_prediction],
+                                            feed_dict=feed_dict)
+            if (step % 500 == 0):
+                print('Minibatch loss at step %d: %f' % (step, l))
+                print('\tMinibatch accuracy: %.1f%%' % accuracy(
+                      predictions, batch_labels))
                 print('\tValidation accuracy: %.1f%%' % accuracy(
                       valid_prediction.eval(), valid_labels))
         print('Test accuracy: %.1f%%' % accuracy(test_prediction.eval(), test_labels))
-
