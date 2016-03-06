@@ -72,3 +72,5 @@ notMNIST_small
 notMNIST.pickle
 
 tf/MNIST_data
+tf/data*
+tf/checkpoint
