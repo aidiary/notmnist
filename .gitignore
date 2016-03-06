@@ -70,3 +70,5 @@ target/
 notMNIST_large
 notMNIST_small
 notMNIST.pickle
+
+tf/MNIST_data
