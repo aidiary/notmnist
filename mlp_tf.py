@@ -63,21 +63,22 @@ if __name__ == "__main__":
         weights2 = tf.Variable(
             tf.truncated_normal([hidden1_units, num_labels]))
         biases2 = tf.Variable(tf.zeros([num_labels]))
-        logits = tf.matmul(hidden1, weights2) + biases2
 
-        # loss function
+        def feedforward(dataset):
+            h1 = tf.nn.relu(tf.matmul(dataset, weights1) + biases1)
+            return tf.matmul(h1, weights2) + biases2
+
+        logits = feedforward(tf_train_dataset)
+
         loss = tf.reduce_mean(
           tf.nn.softmax_cross_entropy_with_logits(logits, tf_train_labels))
 
-        # Optimizer
         optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
 
         # Predictions for the training, validation, and test data
         train_prediction = tf.nn.softmax(logits)
-        valid_prediction = tf.nn.softmax(
-            tf.matmul(tf.nn.relu(tf.matmul(tf_valid_dataset, weights1) + biases1), weights2) + biases2)
-        test_prediction = tf.nn.softmax(
-            tf.matmul(tf.nn.relu(tf.matmul(tf_test_dataset, weights1) + biases1), weights2) + biases2)
+        valid_prediction = tf.nn.softmax(feedforward(tf_valid_dataset))
+        test_prediction = tf.nn.softmax(feedforward(tf_test_dataset))
 
     with tf.Session(graph=graph) as session:
         tf.initialize_all_variables().run()
