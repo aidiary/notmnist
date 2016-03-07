@@ -26,8 +26,8 @@ if __name__ == "__main__":
 
     with open(pickle_file, 'rb') as f:
         save = pickle.load(f)
-        train_dataset = save['train_dataset']
-        train_labels = save['train_labels']
+        train_dataset = save['train_dataset'][:train_subset]
+        train_labels = save['train_labels'][:train_subset]
         valid_dataset = save['valid_dataset']
         valid_labels = save['valid_labels']
         test_dataset = save['test_dataset']
